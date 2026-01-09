@@ -50,8 +50,8 @@ jobs:
           summary = f"""
           ## Model Evaluation Summary (Python {os.environ.get('PYTHON_VERSION', 'N/A')})
 
-          **Name:** Ashiq Firoz  
-          **Roll Number:** 2022BCD0013  
+          **Name:** Sathvik Kiran
+          **Roll Number:** 2022BCD0028  
 
           **Model:** {model}  
           **Mean Squared Error (MSE):** {mse:.4f}  
