@@ -42,63 +42,64 @@ print("Splitting train test data")
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 # 02 X_train, X_test, y_train, y_test = train_test_split(X_t, y_t, test_size=0.2, random_state=42)
 
-# scaler = StandardScaler()
-# scaler.fit(X_train)
+print("Applying StandardScaler preprocessing")
+scaler = StandardScaler()
+scaler.fit(X_train)
 
-# X_train_scaled = scaler.transform(X_train)
-# X_test_scaled = scaler.transform(X_test)
+X_train_scaled = scaler.transform(X_train)
+X_test_scaled = scaler.transform(X_test)
 
-# print("Training Linear Regression Model")
+print("Training RandomForestRegressor (n_estimators=50, max_depth=10)")
+model = RandomForestRegressor(n_estimators=50, max_depth=10, random_state=0)
+model.fit(X_train_scaled, y_train)
 
-# model = LinearRegression()
-# model.fit(X_train, y_train)
-
-print("Training Linear Regression Model Lasso alpha 0.1")
-model = RandomForestRegressor(n_estimators=100,max_depth=15, random_state=0)
-model.fit(X_train,y_train)
-
-model_filename = 'output/model-linear-exp1.pkl'
-os.makedirs(os.path.dirname(model_filename), exist_ok=True)
+model_dir = 'output'
+os.makedirs(model_dir, exist_ok=True)
+model_filename = os.path.join(model_dir, 'model-rf-50-10.pkl')
+scaler_filename = os.path.join(model_dir, 'scaler-rf-50-10.pkl')
 joblib.dump(model, model_filename)
+joblib.dump(scaler, scaler_filename)
 print(f"Model saved to {model_filename}")
+print(f"Scaler saved to {scaler_filename}")
 
-r2_score_value = model.score(X_test, y_test)
+r2_score_value = model.score(X_test_scaled, y_test)
 print(f"R^2 Score: {r2_score_value:.2f}")
 
-
-y_pred = model.predict(X_test)
+y_pred = model.predict(X_test_scaled)
 
 mse_value = mean_squared_error(y_test, y_pred)
 print(f"Mean Squared Error (MSE): {mse_value:.2f}")
 
-print("Saving as a JSON output")
+print("Saving metrics to JSON output")
 
 data = {
-    "Experiment ID": "Exp-02",
-    "Model Type": "Linear Regression - Lasso",
-    "Hyperparameters": "Regularization",
-    "Preprocessing-Steps": "Standardization",
-    "Feature-Selection-Method": "correlation-based",
-    "Train/Test-Split" : "80-20" ,
-    "MSE" : mse_value,
-    "R^2 Score" : r2_score_value
+    "Experiment ID": "Exp-RF-50-10",
+    "Model Type": "RandomForestRegressor",
+    "Hyperparameters": {
+        "n_estimators": 50,
+        "max_depth": 10,
+        "random_state": 0
+    },
+    "Preprocessing-Steps": "StandardScaler",
+    "Feature-Selection-Method": "drop-density-fixed_acidity",
+    "Train/Test-Split": "80-20",
+    "MSE": float(mse_value),
+    "R2": float(r2_score_value)
 }
 
-filename = 'output/metrics.json'
+filename = os.path.join(model_dir, 'metrics.json')
 
 if os.path.exists(filename):
     with open(filename, 'r') as json_file:
         existing_data = json.load(json_file)
-    
     if isinstance(existing_data, list):
         existing_data.append(data)
     else:
         existing_data = [existing_data, data]
-    
     with open(filename, 'w') as json_file:
         json.dump(existing_data, json_file, indent=4)
 else:
     with open(filename, 'w') as json_file:
         json.dump([data], json_file, indent=4)
 
-print(f"Data successfully saved to {filename}")
+print(f"Metrics successfully saved to {filename}")
