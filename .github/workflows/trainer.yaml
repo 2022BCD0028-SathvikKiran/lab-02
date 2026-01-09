@@ -43,9 +43,9 @@ jobs:
 
           latest = data[-1]
 
-          mse = latest["MSE"]
-          r2 = latest["R^2 Score"]
-          model = latest["Model Type"]
+          mse = latest.get("MSE", latest.get("mse", 0))
+          r2 = latest.get("R^2 Score", latest.get("R2", 0))
+          model = latest.get("Model Type", "Unknown")
 
           summary = f"""
           ## Model Evaluation Summary (Python {os.environ.get('PYTHON_VERSION', 'N/A')})
@@ -58,7 +58,7 @@ jobs:
           **R² Score:** {r2:.4f}
           """
 
-          with open(os.environ["GITHUB_STEP_SUMMARY"], "w") as f:
+          with open(os.environ.get("GITHUB_STEP_SUMMARY", "./summary.md"), "w") as f:
               f.write(summary)
           EOF
         env:
@@ -69,5 +69,5 @@ jobs:
         with:
           name: training-artifacts-py${{ matrix.python-version }}
           path: |
-            output/model-linear-exp1.pkl
+            output/*.pkl
             output/metrics.json
