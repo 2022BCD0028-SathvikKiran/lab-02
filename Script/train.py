@@ -84,7 +84,8 @@ data = {
     "Feature-Selection-Method": "drop-density-fixed_acidity",
     "Train/Test-Split": "80-20",
     "MSE": float(mse_value),
-    "R2": float(r2_score_value)
+    "R2": float(r2_score_value),
+    "R^2 Score": float(r2_score_value)
 }
 
 filename = os.path.join(model_dir, 'metrics.json')
