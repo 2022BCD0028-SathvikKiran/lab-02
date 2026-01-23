@@ -8,5 +8,19 @@
         "Train/Test-Split": "80-20",
         "MSE": 0.5466964419594447,
         "R^2 Score": 0.2597673129771393
+    },
+    {
+        "Experiment ID": "Exp-RF-50-10",
+        "Model Type": "RandomForestRegressor",
+        "Hyperparameters": {
+            "n_estimators": 50,
+            "max_depth": 10,
+            "random_state": 0
+        },
+        "Preprocessing-Steps": "StandardScaler",
+        "Feature-Selection-Method": "drop-density-fixed_acidity",
+        "Train/Test-Split": "80-20",
+        "MSE": 0.42674525020515675,
+        "R^2 Score": 0.422182478266358
     }
 ]

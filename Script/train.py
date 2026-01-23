@@ -84,22 +84,32 @@ data = {
     "Feature-Selection-Method": "drop-density-fixed_acidity",
     "Train/Test-Split": "80-20",
     "MSE": float(mse_value),
-    "R2": float(r2_score_value)
+    "R^2 Score": float(r2_score_value)
 }
 
 filename = os.path.join(model_dir, 'metrics.json')
-
+# Load existing metrics (if any), replace entry with same Experiment ID, otherwise append
+existing_data = []
 if os.path.exists(filename):
-    with open(filename, 'r') as json_file:
-        existing_data = json.load(json_file)
-    if isinstance(existing_data, list):
-        existing_data.append(data)
-    else:
-        existing_data = [existing_data, data]
-    with open(filename, 'w') as json_file:
-        json.dump(existing_data, json_file, indent=4)
-else:
-    with open(filename, 'w') as json_file:
-        json.dump([data], json_file, indent=4)
+    try:
+        with open(filename, 'r', encoding='utf-8-sig') as json_file:
+            existing_data = json.load(json_file)
+            if not isinstance(existing_data, list):
+                existing_data = [existing_data]
+    except Exception:
+        existing_data = []
+
+found = False
+for i, item in enumerate(existing_data):
+    if item.get('Experiment ID') == data.get('Experiment ID'):
+        existing_data[i] = data
+        found = True
+        break
+
+if not found:
+    existing_data.append(data)
+
+with open(filename, 'w', encoding='utf-8') as json_file:
+    json.dump(existing_data, json_file, indent=4)
 
 print(f"Metrics successfully saved to {filename}")

@@ -1,0 +1,14 @@
+{
+  "source_file": "lab2\\actions_runs.json",
+  "latest_run": {
+    "id": 20860344156,
+    "name": "Automated Training and Metric Reporting Using GitHub Actions",
+    "branch": "main",
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/2022BCD0028-SathvikKiran/lab-02/actions/runs/20860344156",
+    "logs_url": "https://api.github.com/repos/2022BCD0028-SathvikKiran/lab-02/actions/runs/20860344156/logs",
+    "created_at": "2026-01-09T17:39:27Z"
+  },
+  "top_runs_count": 5
+}
